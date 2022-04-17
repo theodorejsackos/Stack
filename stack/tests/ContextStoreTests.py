@@ -3,12 +3,12 @@ import unittest
 from stack.src.ContextStore import *
 
 class ExpectedBehaviors():
-    def test_listEmptyIsSafe(self, c):
+    def listEmptyIsSafe(self, c):
         actual = c.list()
 
         self.assertEqual(0, len(actual))
 
-    def test_listOneReturnsOne(self, c):
+    def listOneReturnsOne(self, c):
         expected = "Don't forget to do that one thing"
         c.push(StackContext(expected))
 
@@ -17,7 +17,7 @@ class ExpectedBehaviors():
         self.assertEqual(1, len(actual))
         self.assertEqual(expected, actual[0].description)
 
-    def test_listReturnsMultipleInStackOrder(self, c):
+    def listReturnsMultipleInStackOrder(self, c):
         c.push(StackContext('1'))
         c.push(StackContext('2'))
         c.push(StackContext('3'))
@@ -29,7 +29,7 @@ class ExpectedBehaviors():
         self.assertEqual('2', actual[1].description)
         self.assertEqual('1', actual[2].description)
 
-    def test_listReturnsLimit(self, c):
+    def listReturnsLimit(self, c):
         c.push(StackContext('1'))
         c.push(StackContext('2'))
         c.push(StackContext('3'))
@@ -45,7 +45,7 @@ class ExpectedBehaviors():
         self.assertEqual('2', actual[3].description)
         self.assertEqual('1', actual[4].description)
 
-    def test_listReturnsUpToLimit(self, c):
+    def listReturnsUpToLimit(self, c):
         c.push(StackContext('1'))
         c.push(StackContext('2'))
         c.push(StackContext('3'))
@@ -62,19 +62,19 @@ class ExpectedBehaviors():
         self.assertEqual('3', actual[3].description)
         self.assertEqual('2', actual[4].description)
 
-    def test_popReturnsNoneWhenEmpty(self, c):
+    def popReturnsNoneWhenEmpty(self, c):
         actual = c.pop()
 
         self.assertEqual(None, actual)
 
-    def test_popReturnsOnly(self, c):
+    def popReturnsOnly(self, c):
         c.push(StackContext('1'))
 
         actual = c.pop()
 
         self.assertEqual('1', actual.description)
 
-    def test_popReturnsTopWhenMultiple(self, c):
+    def popReturnsTopWhenMultiple(self, c):
         c.push(StackContext('1'))
         c.push(StackContext('2'))
 
@@ -90,9 +90,9 @@ implementations = [
 class TestHost(unittest.TestCase):
     pass
 
-def add_dynamic_test_method(method_name, context, test_instance):
-    test_method = getattr(ExpectedBehaviors, method_name)
-    test_method_name = f'{method_name}_{impl[0]}'
+def add_dynamic_test_method(behaviorDescription, implementationName, test_instance):
+    test_method = getattr(ExpectedBehaviors, behaviorDescription)
+    test_method_name = f'test_{behaviorDescription}_{implementationName}'
     test_method_decorator = lambda _self: test_method(_self, test_instance)
     setattr(TestHost, test_method_name, test_method_decorator)
 
